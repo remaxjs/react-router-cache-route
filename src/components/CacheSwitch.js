@@ -4,7 +4,6 @@ import {
   Switch,
   matchPath,
   withRouter,
-  __RouterContext
 } from 'react-router-dom'
 
 import { COMPUTED_UNMATCH_KEY, isMatch } from '../core/CacheComponent'
@@ -13,23 +12,11 @@ import SwitchFragment from './SwitchFragment'
 import { get, isNull, isExist } from '../helpers'
 import CacheRoute from './CacheRoute'
 
-const isUsingNewContext = isExist(__RouterContext)
-
 class CacheSwitch extends Switch {
   getContext = () => {
-    if (isUsingNewContext) {
-      const { location, match } = this.props
+    const { location, match } = this.props
 
-      return { location, match }
-    } else {
-      const { route } = this.context.router
-      const location = this.props.location || route.location
-
-      return {
-        location,
-        match: route.match
-      }
-    }
+    return { location, match }
   }
 
   render() {
@@ -108,28 +95,14 @@ class CacheSwitch extends Switch {
   }
 }
 
-if (isUsingNewContext) {
-  CacheSwitch.propTypes = {
-    children: PropTypes.node,
-    location: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
-    which: PropTypes.func
-  }
-
-  CacheSwitch = withRouter(CacheSwitch)
-} else {
-  CacheSwitch.contextTypes = {
-    router: PropTypes.shape({
-      route: PropTypes.object.isRequired
-    }).isRequired
-  }
-
-  CacheSwitch.propTypes = {
-    children: PropTypes.node,
-    location: PropTypes.object,
-    which: PropTypes.func
-  }
+CacheSwitch.propTypes = {
+  children: PropTypes.node,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  which: PropTypes.func
 }
+
+CacheSwitch = withRouter(CacheSwitch)
 
 CacheSwitch.defaultProps = {
   which: element => get(element, 'type') === CacheRoute
