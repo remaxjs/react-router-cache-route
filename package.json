@@ -1,5 +1,5 @@
 {
-  "name": "react-router-cache-route",
+  "name": "@remax/react-router-cache-route",
   "version": "1.8.4",
   "description": "cache-route for react-router base on react v15+ and router v4+",
   "main": "index.js",
